@@ -1,37 +1,71 @@
-# Программа проверяет условие: (na // 3) > (nb // 3).
 
-def check_a(word):
-    """
-    word - список символов, например ['a','a','b'].
-    Возвращает True, если (na // 3) > (nb // 3).
-    """
-    na = 0
-    nb = 0
-    for c in word:
-        if c == 'a':
-            na += 1
-        elif c == 'b':
-            nb += 1
+
+NUM_STATES = 9
+
+
+delta = [[0, 0] for _ in range(NUM_STATES)]
+
+for i in range(3):
+    for j in range(3):
+        s = i * 3 + j
+        delta[s][0] = ((i + 1) % 3) * 3 + j   # по 'a'
+        delta[s][1] = i * 3 + ((j + 1) % 3)   # по 'b'
+
+START = 0  # (0,0)
+
+accepting = set()
+for i in range(3):
+    for j in range(3):
+        if i > j:
+            accepting.add(i * 3 + j)
+
+names = {}
+for i in range(3):
+    for j in range(3):
+        names[i * 3 + j] = f"q_{i}{j}"
+
+
+def accepts(word):
+    """Прогон ДКА на цепочке. Возвращает True/False."""
+    state = START
+    for ch in word:
+        if ch == 'a':
+            sym = 0
+        elif ch == 'b':
+            sym = 1
         else:
             return False
-    return (na // 3) > (nb // 3)
+        state = delta[state][sym]
+    return state in accepting
+
+
+def print_table(tests):
+    print("+----------------------+----------+")
+    print("| Цепочка              | Результат|")
+    print("+----------------------+----------+")
+
+    for t in tests:
+        word = ''.join(t) if t else "(пустая)"
+        res = accepts(t)
+        result = "Accept" if res else "Reject"
+        print(f"| {word:<20} | {result:<8} |")
+
 
 
 def main():
     tests = [
-        ['a','a','a'],
-        ['a','a','a','b','b','b'],
-        ['a','a','a','a','a','a'],
-        ['a','a','a','a','a','a','b','b','b'],
-        ['a','a','a','a','a','a','b','b','b','b','b','b'],
-        ['a','b'],
-        [],
+        ['a'],
+        ['aa'],
+        ['aaa'],
+        ['aaaa'],
+        ['ab'],
+        ['aab'],
+        ['abb'],
+        ['aabb'],
+        ['aaabbb'],
+        ['aaaaabbb'],
     ]
-    for t in tests:
-        print("Цепочка:", ''.join(t) if t else "(пустая)")
-        res = check_a(t)
-        print("Результат:", "ДОПУСТИТЬ" if res else "ОТКЛОНИТЬ")
-        print("---")
+    print_table(tests)
 
 
 if __name__ == "__main__":
