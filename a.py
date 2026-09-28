@@ -1,7 +1,4 @@
-
-
 NUM_STATES = 9
-
 
 delta = [[0, 0] for _ in range(NUM_STATES)]
 
@@ -11,7 +8,7 @@ for i in range(3):
         delta[s][0] = ((i + 1) % 3) * 3 + j   # по 'a'
         delta[s][1] = i * 3 + ((j + 1) % 3)   # по 'b'
 
-START = 0  # (0,0)
+START = 0
 
 accepting = set()
 for i in range(3):
@@ -26,7 +23,6 @@ for i in range(3):
 
 
 def accepts(word):
-    """Прогон ДКА на цепочке. Возвращает True/False."""
     state = START
     for ch in word:
         if ch == 'a':
@@ -50,20 +46,14 @@ def print_table(tests):
         result = "Accept" if res else "Reject"
         print(f"| {word:<20} | {result:<8} |")
 
+    print("+----------------------+----------+")
 
 
 def main():
     tests = [
-        ['a'],
-        ['aa'],
-        ['aaa'],
-        ['aaaa'],
-        ['ab'],
-        ['aab'],
-        ['abb'],
-        ['aabb'],
-        ['aaabbb'],
-        ['aaaaabbb'],
+        ['a'], ['aa'], ['aaa'], ['aaaa'],
+        ['ab'], ['aab'], ['abb'], ['aabb'],
+        ['aaabbb'], ['aaaaabbb'],
     ]
     print_table(tests)
 
