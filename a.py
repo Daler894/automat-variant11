@@ -1,4 +1,7 @@
+
+
 NUM_STATES = 9
+
 
 delta = [[0, 0] for _ in range(NUM_STATES)]
 
@@ -8,8 +11,9 @@ for i in range(3):
         delta[s][0] = ((i + 1) % 3) * 3 + j   # по 'a'
         delta[s][1] = i * 3 + ((j + 1) % 3)   # по 'b'
 
-START = 0
+START = 0  # (0,0)
 
+# Допускающие состояния: i > j
 accepting = set()
 for i in range(3):
     for j in range(3):
@@ -23,6 +27,10 @@ for i in range(3):
 
 
 def accepts(word):
+    """
+    Прогон ДКА на цепочке.
+    word - список символов, например ['a', 'a', 'b'].
+    """
     state = START
     for ch in word:
         if ch == 'a':
@@ -35,27 +43,38 @@ def accepts(word):
     return state in accepting
 
 
-def print_table(tests):
+def main():
+    tests = [
+        ['a'],
+        ['a', 'a'],
+        ['a', 'a', 'a'],
+        ['a', 'a', 'a', 'a'],
+        ['a', 'b'],
+        ['a', 'a', 'b'],
+        ['a', 'b', 'b'],
+        ['a', 'a', 'b', 'b'],
+        ['a', 'a', 'a', 'b', 'b', 'b'],
+        ['a', 'a', 'a', 'a', 'a', 'b', 'b', 'b'],
+    ]
+
+    # Заголовок
     print("+----------------------+----------+")
     print("| Цепочка              | Результат|")
     print("+----------------------+----------+")
 
     for t in tests:
-        word = ''.join(t) if t else "(пустая)"
+        print("| ", end="")
+        for ch in t:
+            print(ch, end="")
+        for _ in range(20 - len(t)):
+            print(" ", end="")
+        print("| ", end="")
+
         res = accepts(t)
         result = "Accept" if res else "Reject"
-        print(f"| {word:<20} | {result:<8} |")
+        print(f"{result:<8} |")
 
     print("+----------------------+----------+")
-
-
-def main():
-    tests = [
-        ['a'], ['aa'], ['aaa'], ['aaaa'],
-        ['ab'], ['aab'], ['abb'], ['aabb'],
-        ['aaabbb'], ['aaaaabbb'],
-    ]
-    print_table(tests)
 
 
 if __name__ == "__main__":
